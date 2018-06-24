@@ -64,16 +64,16 @@ FixedwingLandDetector::FixedwingLandDetector()
 
 void FixedwingLandDetector::_initialize_topics()
 {
+	LandDetector::_initialize_topics();
+
 	_airspeedSub = orb_subscribe(ORB_ID(airspeed));
-	_local_pos_sub = orb_subscribe(ORB_ID(vehicle_local_position));
-	_sensor_bias_sub = orb_subscribe(ORB_ID(sensor_bias));
 }
 
 void FixedwingLandDetector::_update_topics()
 {
+	LandDetector::_update_topics();
+
 	_orb_update(ORB_ID(airspeed), _airspeedSub, &_airspeed);
-	_orb_update(ORB_ID(sensor_bias), _sensor_bias_sub, &_sensors);
-	_orb_update(ORB_ID(vehicle_local_position), _local_pos_sub, &_local_pos);
 }
 
 void FixedwingLandDetector::_update_params()
@@ -82,14 +82,6 @@ void FixedwingLandDetector::_update_params()
 	param_get(_paramHandle.maxClimbRate, &_params.maxClimbRate);
 	param_get(_paramHandle.maxAirSpeed, &_params.maxAirSpeed);
 	param_get(_paramHandle.maxXYAccel, &_params.maxXYAccel);
-}
-
-float FixedwingLandDetector::_get_max_altitude()
-{
-	// TODO
-	// This means no altitude limit as the limit
-	// is always current position plus 10000 meters
-	return roundf(-_local_pos.z + 10000);
 }
 
 bool FixedwingLandDetector::_get_landed_state()
